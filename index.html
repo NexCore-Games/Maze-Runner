@@ -1,0 +1,2638 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maze Runner - NexCore Games</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        canvas {
+            border: 2px solid #fff;
+            background: #000;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="600" height="600"></canvas>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const player = {
+            x: 30,
+            y: 30,
+            size: 20,
+            color: '#4caf50',
+            speed: 5
+        };
+
+        const keys = {
+            ArrowUp: false,
+            ArrowDown: false,
+            ArrowLeft: false,
+            ArrowRight: false
+        };
+
+        function drawPlayer() {
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.size, player.size);
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function updatePlayerPosition() {
+            if (keys.ArrowUp && player.y > 0) player.y -= player.speed;
+            if (keys.ArrowDown && player.y + player.size < canvas.height) player.y += player.speed;
+            if (keys.ArrowLeft && player.x > 0) player.x -= player.speed;
+            if (keys.ArrowRight && player.x + player.size < canvas.width) player.x += player.speed;
+        }
+
+        function gameLoop() {
+            clearCanvas();
+            updatePlayerPosition();
+            drawPlayer();
+            requestAnimationFrame(gameLoop);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key in keys) keys[e.key] = true;
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (e.key in keys) keys[e.key] = false;
+        });
+
+        gameLoop();
+    </script>
+</body>
+</html> -->
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maze Runner - Levels</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #111;
+            color: white;
+        }
+        canvas {
+            background-color: black;
+            display: block;
+            border: 2px solid white;
+        }
+        #levelText {
+            position: absolute;
+            top: 20px;
+            font-size: 24px;
+            color: yellow;
+            font-family: Arial, sans-serif;
+        }
+        #message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 32px;
+            color: white;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="levelText">Level: 1</div>
+    <div id="message"> Level 1 Completed </div>
+    <canvas id="gameCanvas" width="600" height="600"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const levelText = document.getElementById('levelText');
+        const message = document.getElementById('message');
+        // Player properties
+        const player = { x: 30, y: 30, size: 20, speed: 3, color: 'lime' };
+
+        // Goal properties
+        const goal = { x: 550, y: 550, size: 30, color: 'yellow' }; -->
+
+        <!-- // Levels data
+        // const levels = [
+        //     [ // Level 1
+        //         { x: 0, y: 0, width: 600, height: 10 }, // Top boundary
+        //         { x: 0, y: 0, width: 10, height: 600 }, // Left boundary
+        //         { x: 590, y: 0, width: 10, height: 600 }, // Right boundary
+        //         { x: 0, y: 590, width: 600, height: 10 }, // Bottom boundary
+        //         { x: 100, y: 100, width: 400, height: 10 },
+        //         { x: 100, y: 200, width: 10, height: 300 },
+        //         { x: 200, y: 200, width: 300, height: 10 },
+        //         { x: 500, y: 200, width: 10, height: 300 }
+        //     ],
+        //     [ // Level 2
+        //         { x: 0, y: 0, width: 600, height: 10 },
+        //         { x: 0, y: 0, width: 10, height: 600 },
+        //         { x: 590, y: 0, width: 10, height: 600 },
+        //         { x: 0, y: 590, width: 600, height: 10 },
+        //         { x: 150, y: 100, width: 300, height: 10 },
+        //         { x: 150, y: 200, width: 10, height: 300 },
+        //         { x: 300, y: 250, width: 40, height: 40 },
+        //         { x: 500, y: 200, width: 10, height: 300 }
+        //     ],
+        //     [ // Level 3
+        //         { x: 0, y: 0, width: 600, height: 10 }, // Top boundary
+        //         { x: 0, y: 0, width: 10, height: 600 }, // Left boundary
+        //         { x: 590, y: 0, width: 10, height: 600 }, // Right boundary
+        //         { x: 0, y: 590, width: 600, height: 10 }, // Bottom boundary
+        //         { x: 200, y: 100, width: 400, height: 10 },
+        //         { x: 200, y: 100, width: 10, height: 400 },
+        //         { x: 400, y: 350, width: 30, height: 30 },
+        //         { x: 400, y: 200, width: 10, height: 300 }
+        //     ],
+        //     [ // Level 4
+        //         { x: 0, y: 0, width: 600, height: 10 },
+        //         { x: 0, y: 0, width: 10, height: 600 },
+        //         { x: 590, y: 0, width: 10, height: 600 },
+        //         { x: 0, y: 590, width: 600, height: 10 },
+        //         { x: 550, y: 100, width: 500, height: 10 },
+        //         { x: 550, y: 200, width: 10, height: 400 },
+        //         { x: 150, y: 250, width: 40, height: 40 },
+        //         { x: 150, y: 200, width: 10, height: 300 }
+        //     ],
+            // [ // Level 5
+        //         { x: 0, y: 0, width: 600, height: 10 }, // Top boundary
+        //         { x: 0, y: 0, width: 10, height: 600 }, // Left boundary
+        //         { x: 590, y: 0, width: 10, height: 600 }, // Right boundary
+        //         { x: 0, y: 590, width: 600, height: 10 }, // Bottom boundary
+        //         { x: 100, y: 100, width: 400, height: 10 },
+        //         { x: 100, y: 200, width: 10, height: 300 },
+        //         { x: 200, y: 200, width: 300, height: 10 },
+        //         { x: 500, y: 200, width: 10, height: 300 }
+        //     ],
+            
+        // ];
+
+        // let currentLevel = 0;
+        // let keys = {};
+
+        // Movement handler
+        // window.addEventListener('keydown', (e) => { keys[e.key] = true; });
+        // window.addEventListener('keyup', (e) => { keys[e.key] = false; });
+
+        // Collision detection
+        // function isColliding(rect1, rect2) {
+        //     return (
+        //         rect1.x < rect2.x + rect2.width &&
+        //         rect1.x + rect1.size > rect2.x &&
+        //         rect1.y < rect2.y + rect2.height &&
+        //         rect1.y + rect1.size > rect2.y
+        //     );
+        // }
+
+        // Update player's position
+        // function update() {
+        //     let nextX = player.x;
+        //     let nextY = player.y;
+
+        //     if (keys['ArrowUp']) nextY -= player.speed;
+        //     if (keys['ArrowDown']) nextY += player.speed;
+        //     if (keys['ArrowLeft']) nextX -= player.speed;
+        //     if (keys['ArrowRight']) nextX += player.speed;
+
+        //     const nextPos = { x: nextX, y: nextY, size: player.size };
+
+        //     let collision = false;
+        //     for (const wall of levels[currentLevel]) {
+        //         if (isColliding(nextPos, wall)) {
+        //             collision = true;
+        //             break;
+        //         }
+        //     }
+
+        //     if (!collision) {
+        //         player.x = nextX;
+        //         player.y = nextY;
+        //     }
+
+        //     if (isColliding(player, { x: goal.x, y: goal.y, width: goal.size, height: goal.size })) {
+        //         nextLevel();
+        //     }
+        // }
+
+        // Draw game objects
+        // function draw() {
+        //     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw walls
+            // ctx.fillStyle = 'red';
+            // for (const wall of levels[currentLevel]) {
+            //     ctx.fillRect(wall.x, wall.y, wall.width, wall.height);
+            // }
+
+            // Draw goal
+            // ctx.fillStyle = goal.color;
+            // ctx.fillRect(goal.x, goal.y, goal.size, goal.size);
+
+            // Draw player
+        //     ctx.fillStyle = player.color;
+        //     ctx.fillRect(player.x, player.y, player.size, player.size);
+        // }
+
+        // Go to next level
+//         function nextLevel() {
+//             currentLevel++;
+//             if (currentLevel >= levels.length) {
+//                 alert('Congratulations! You completed all levels!');
+//                 currentLevel = 0;
+//             }
+//             player.x = 30;
+//             player.y = 30;
+//             levelText.textContent = `Level: ${currentLevel + 1}`;
+//         }
+
+//         // Game loop
+//         function gameLoop() {
+//             update();
+//             draw();
+//             requestAnimationFrame(gameLoop);
+//         }
+
+//         gameLoop();
+//     </script>
+// </body>
+// </html> -->
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maze Runner - 100 Levels</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #222;
+            color: white;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        canvas {
+            background-color: #000;
+            border: 2px solid white;
+        }
+        #ui {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 20px;
+        }
+        #message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 32px;
+            color: white;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="ui">
+        <div>Level: <span id="levelDisplay">1</span></div>
+        <div>Score: <span id="scoreDisplay">0</span></div>
+        <div>Time: <span id="timerDisplay">30</span> sec</div>
+    </div>
+    <div id="message">Level 1 Complete!</div>
+    <canvas id="gameCanvas" width="600" height="600"></canvas>
+
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        const levelDisplay = document.getElementById("levelDisplay");
+        const scoreDisplay = document.getElementById("scoreDisplay");
+        const timerDisplay = document.getElementById("timerDisplay");
+        const message = document.getElementById("message");
+
+        const player = { x: 30, y: 30, size: 20, speed: 3, color: "lime" };
+        const goal = { x: 550, y: 550, size: 30, color: "yellow" };
+
+        let currentLevel = 1;
+        const maxLevels = 100;
+        let score = 0;
+        let timeLeft = 30;
+        let timer;
+        let walls = [];
+        let obstacles = [];
+        let keys = {};
+
+        // Key Listeners
+        window.addEventListener("keydown", (e) => (keys[e.key] = true));
+        window.addEventListener("keyup", (e) => (keys[e.key] = false));
+
+        // Generate Dynamic Levels
+        function generateLevel(level) {
+            walls = [];
+            obstacles = [];
+
+            // Outer boundary walls
+            walls.push({ x: 0, y: 0, width: 600, height: 10 });
+            walls.push({ x: 0, y: 0, width: 10, height: 600 });
+            walls.push({ x: 590, y: 0, width: 10, height: 600 });
+            walls.push({ x: 0, y: 590, width: 600, height: 10 });
+
+            // Random Walls
+            let numWalls = 5 + Math.min(level, 20); // Increase walls with levels
+            for (let i = 0; i < numWalls; i++) {
+                walls.push({
+                    x: Math.random() * 500 + 50,
+                    y: Math.random() * 500 + 50,
+                    width: Math.random() * 200 + 20,
+                    height: 10,
+                });
+            }
+
+            // Random Obstacles
+            let numObstacles = Math.min(level, 10); // Max 10 obstacles
+            for (let i = 0; i < numObstacles; i++) {
+                obstacles.push({
+                    x: Math.random() * 500 + 50,
+                    y: Math.random() * 500 + 50,
+                    width: 30,
+                    height: 30,
+                    speed: Math.random() * 2 + 1,
+                    direction: 1,
+                });
+            }
+
+            // Reset Player Position
+            player.x = 30;
+            player.y = 30;
+            timeLeft = 30;
+            startTimer();
+        }
+
+        function startTimer() {
+            clearInterval(timer);
+            timer = setInterval(() => {
+                timeLeft--;
+                timerDisplay.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    resetPlayer();
+                }
+            }, 1000);
+        }
+
+        function resetPlayer() {
+            player.x = 30;
+            player.y = 30;
+            timeLeft = 30;
+            score = 0;
+            scoreDisplay.textContent = score;
+        }
+
+        function isColliding(a, b) {
+            return (
+                a.x < b.x + b.width &&
+                a.x + a.size > b.x &&
+                a.y < b.y + b.height &&
+                a.y + a.size > b.y
+            );
+        }
+
+        function updateObstacles() {
+            for (let obs of obstacles) {
+                obs.y += obs.speed * obs.direction;
+                if (obs.y < 10 || obs.y + obs.height > 590) obs.direction *= -1;
+            }
+        }
+
+        function update() {
+            let nextX = player.x;
+            let nextY = player.y;
+
+            if (keys["ArrowUp"]) nextY -= player.speed;
+            if (keys["ArrowDown"]) nextY += player.speed;
+            if (keys["ArrowLeft"]) nextX -= player.speed;
+            if (keys["ArrowRight"]) nextX += player.speed;
+
+            const nextPos = { x: nextX, y: nextY, size: player.size };
+
+            let collision = walls.some((wall) => isColliding(nextPos, wall));
+            let obstacleHit = obstacles.some((obs) => isColliding(nextPos, obs));
+
+            if (!collision && !obstacleHit) {
+                player.x = nextX;
+                player.y = nextY;
+            } else if (obstacleHit) {
+                resetPlayer();
+            }
+
+            updateObstacles();
+
+            if (isColliding(player, goal)) nextLevel();
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw Walls
+            ctx.fillStyle = "red";
+            walls.forEach((wall) => ctx.fillRect(wall.x, wall.y, wall.width, wall.height));
+
+            // Draw Obstacles
+            ctx.fillStyle = "orange";
+            obstacles.forEach((obs) => ctx.fillRect(obs.x, obs.y, obs.width, obs.height));
+
+            // Draw Goal
+            ctx.fillStyle = goal.color;
+            ctx.fillRect(goal.x, goal.y, goal.size, goal.size);
+
+            // Draw Player
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.size, player.size);
+        }
+
+        function nextLevel() {
+            clearInterval(timer);
+            if (currentLevel < maxLevels) {
+                message.textContent = `Level ${currentLevel} Complete!`;
+                message.style.display = "block";
+                score += 100;
+                setTimeout(() => {
+                    message.style.display = "none";
+                    currentLevel++;
+                    levelDisplay.textContent = currentLevel;
+                    scoreDisplay.textContent = score;
+                    generateLevel(currentLevel);
+                }, 1000);
+            } else {
+                message.textContent = "Congratulations! You completed all levels!";
+                message.style.display = "block";
+            }
+        }
+
+        function gameLoop() {
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Start Game
+        generateLevel(currentLevel);
+        gameLoop();
+    </script>
+</body>
+</html> -->
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maze Runner Game</title>
+    <style>
+        canvas {
+            border: 4px solid red;
+            display: block;
+            margin: auto;
+            background-color: black;
+        }
+        body {
+            background-color: #111;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Maze Runner</h1>
+    <p>Level: <span id="level">1</span> | Score: <span id="score">0</span> | Time: <span id="time">0</span> sec</p>
+    <canvas id="gameCanvas" width="600" height="600"></canvas>
+
+    <script>
+        // Game variables
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        let playerX = 50, playerY = 550; // Player start position
+        const playerSize = 20; // Player square size
+        let goalX = 550, goalY = 50; // Goal position
+        const goalSize = 20; // Goal square size
+        let level = 1, score = 0;
+        let time = 0; // Timer in seconds
+        let obstacles = [];
+        let obstacleSpeed = 2; // Obstacle movement speed
+        let timerInterval;
+
+        // Initialize Game
+        function initGame() {
+            generateObstaclesForLevel(level);
+            startTimer();
+            gameLoop();
+        }
+
+        // Generate obstacles based on the level
+        function generateObstaclesForLevel(currentLevel) {
+            obstacles = [];
+            let numObstacles = Math.min(5 + currentLevel, 20); // Max 20 obstacles
+            for (let i = 0; i < numObstacles; i++) {
+                let x = Math.random() * (canvas.width - 50);
+                let y = Math.random() * (canvas.height - 50);
+                let width = Math.random() * 50 + 30; // Random width
+                let height = 10; // Fixed height
+                obstacles.push({ x, y, width, height, direction: Math.random() > 0.5 ? 1 : -1 });
+            }
+        }
+
+        // Draw the game screen
+        function drawGame() {
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw Player
+            ctx.fillStyle = "yellow";
+            ctx.fillRect(playerX, playerY, playerSize, playerSize);
+
+            // Draw Goal
+            ctx.fillStyle = "lime";
+            ctx.fillRect(goalX, goalY, goalSize, goalSize);
+
+            // Draw Obstacles
+            ctx.fillStyle = "red";
+            for (let obs of obstacles) {
+                ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+            }
+        }
+
+        // Move obstacles
+        function moveObstacles() {
+            for (let obs of obstacles) {
+                obs.x += obs.direction * obstacleSpeed;
+                if (obs.x <= 0 || obs.x + obs.width >= canvas.width) {
+                    obs.direction *= -1; // Reverse direction
+                }
+            }
+        }
+
+        // Collision Detection
+        function checkCollisions() {
+            // Check collision with obstacles
+            for (let obs of obstacles) {
+                if (playerX < obs.x + obs.width &&
+                    playerX + playerSize > obs.x &&
+                    playerY < obs.y + obs.height &&
+                    playerY + playerSize > obs.y) {
+                    resetLevel("Game Over! You hit an obstacle!");
+                }
+            }
+
+            // Check if player reaches goal
+            if (playerX < goalX + goalSize &&
+                playerX + playerSize > goalX &&
+                playerY < goalY + goalSize &&
+                playerY + playerSize > goalY) {
+                levelUp();
+            }
+        }
+
+        // Level up function
+        function levelUp() {
+            level++;
+            score += 10; // Increase score
+            alert("Level " + (level - 1) + " Complete! Starting Level " + level);
+            resetPlayerPosition();
+            generateObstaclesForLevel(level);
+            updateHUD();
+        }
+
+        // Reset level
+        function resetLevel(message) {
+            alert(message);
+            level = 1;
+            score = 0;
+            time = 0;
+            obstacleSpeed = 2; // Reset speed
+            resetPlayerPosition();
+            generateObstaclesForLevel(level);
+            updateHUD();
+        }
+
+        // Reset player position
+        function resetPlayerPosition() {
+            playerX = 50;
+            playerY = 550;
+        }
+
+        // Update HUD
+        function updateHUD() {
+            document.getElementById("level").textContent = level;
+            document.getElementById("score").textContent = score;
+            document.getElementById("time").textContent = time;
+        }
+
+        // Timer
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                time++;
+                document.getElementById("time").textContent = time;
+            }, 1000);
+        }
+
+        // Player Movement
+        window.addEventListener("keydown", (e) => {
+            const speed = 10;
+            if (e.key === "ArrowUp" && playerY > 0) playerY -= speed;
+            if (e.key === "ArrowDown" && playerY + playerSize < canvas.height) playerY += speed;
+            if (e.key === "ArrowLeft" && playerX > 0) playerX -= speed;
+            if (e.key === "ArrowRight" && playerX + playerSize < canvas.width) playerX += speed;
+        });
+
+        // Game Loop
+        function gameLoop() {
+            drawGame();
+            moveObstacles();
+            checkCollisions();
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Start the Game
+        initGame();
+    </script>
+</body>
+</html> -->
+
+
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maze Runner Game</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #111;
+            color: #fff;
+        }
+
+        canvas {
+            display: block;
+            margin: 20px auto;
+            border: 5px solid red;
+            background-color: black;
+        }
+
+        #info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 18px;
+        }
+
+        .flash {
+            animation: flash 0.5s ease;
+        }
+
+        @keyframes flash {
+            0%, 100% {
+                background-color: black;
+            }
+            50% {
+                background-color: #444;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <p>Level: <span id="level">1</span></p>
+        <p>Score: <span id="score">0</span></p>
+        <p>Time: <span id="time">0</span> sec</p>
+    </div>
+    <canvas id="gameCanvas" width="600" height="600"></canvas>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const playerSize = 20;
+        const finishSize = 20;
+        let level = 1;
+        let score = 0;
+        let time = 0;
+        let gameInterval;
+        let obstacles = [];
+        let player;
+        let destination;
+        const maxLevels = 100;
+
+        document.getElementById('level').textContent = level;
+        document.getElementById('score').textContent = score;
+        document.getElementById('time').textContent = time;
+
+        function initGame() {
+            resetGameVariables();
+            resetObstacles();
+            spawnPlayer();
+            spawnDestination();
+            startTimer();
+            gameInterval = setInterval(updateGame, 16);
+        }
+
+        function resetGameVariables() {
+            time = 0;
+            player = { x: 10, y: 10, width: playerSize, height: playerSize, speed: 5 };
+        }
+
+        function spawnDestination() {
+            const offset = 30 * (level % 2 ? 2 : 1); // Alternate position for challenge
+            destination = {
+                x: canvas.width - finishSize - offset,
+                y: canvas.height - finishSize - offset,
+                width: finishSize,
+                height: finishSize,
+            };
+        }
+
+        function resetObstacles() {
+            obstacles = [];
+            const obstacleCount = Math.min(level + 2, 15); // Add more obstacles as levels increase
+            for (let i = 0; i < obstacleCount; i++) {
+                obstacles.push({
+                    x: Math.random() * (canvas.width - 100) + 50,
+                    y: Math.random() * (canvas.height - 100) + 50,
+                    width: Math.random() * 100 + 50,
+                    height: 10,
+                    speed: Math.random() * 2 + 1,
+                    direction: Math.random() > 0.5 ? 1 : -1,
+                });
+            }
+        }
+
+        function spawnPlayer() {
+            player.x = 10;
+            player.y = 10;
+        }
+
+        function drawPlayer() {
+            ctx.fillStyle = 'yellow';
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+        }
+
+        function drawDestination() {
+            ctx.fillStyle = 'lime';
+            ctx.strokeStyle = 'yellow';
+            ctx.lineWidth = 3;
+            ctx.fillRect(destination.x, destination.y, destination.width, destination.height);
+            ctx.strokeRect(destination.x, destination.y, destination.width, destination.height);
+        }
+
+        function drawObstacles() {
+            ctx.fillStyle = 'red';
+            obstacles.forEach(obstacle => {
+                ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+            });
+        }
+
+        function moveObstacles() {
+            obstacles.forEach(obstacle => {
+                obstacle.x += obstacle.speed * obstacle.direction;
+                if (obstacle.x < 0 || obstacle.x + obstacle.width > canvas.width) {
+                    obstacle.direction *= -1;
+                }
+            });
+        }
+
+        function collisionDetection() {
+            // Check for collisions with obstacles
+            for (let i = 0; i < obstacles.length; i++) {
+                const obs = obstacles[i];
+                if (
+                    player.x < obs.x + obs.width &&
+                    player.x + player.width > obs.x &&
+                    player.y < obs.y + obs.height &&
+                    player.y + player.height > obs.y
+                ) {
+                    resetLevel();
+                    return;
+                }
+            }
+
+            // Check if the player reached the destination
+            if (
+                player.x < destination.x + destination.width &&
+                player.x + player.width > destination.x &&
+                player.y < destination.y + destination.height &&
+                player.y + player.height > destination.y
+            ) {
+                levelUp();
+            }
+        }
+
+        function resetLevel() {
+            clearInterval(gameInterval);
+            alert('Oops! You hit an obstacle. Try again.');
+            initGame();
+        }
+
+        function levelUp() {
+            clearInterval(gameInterval);
+            score += 100;
+            level++;
+            if (level > maxLevels) {
+                alert('Congratulations! You completed all 100 levels!');
+                return;
+            }
+            document.getElementById('level').textContent = level;
+            document.getElementById('score').textContent = score;
+            flashScreen();
+            initGame();
+        }
+
+        function flashScreen() {
+            canvas.classList.add('flash');
+            setTimeout(() => canvas.classList.remove('flash'), 500);
+        }
+
+        function startTimer() {
+            setInterval(() => {
+                time++;
+                document.getElementById('time').textContent = time;
+            }, 1000);
+        }
+
+        function updateGame() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawPlayer();
+            drawDestination();
+            drawObstacles();
+            moveObstacles();
+            collisionDetection();
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowUp') player.y -= player.speed;
+            if (e.key === 'ArrowDown') player.y += player.speed;
+            if (e.key === 'ArrowLeft') player.x -= player.speed;
+            if (e.key === 'ArrowRight') player.x += player.speed;
+        });
+
+        initGame();
+    </script>
+</body>
+</html> -->
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maze Runner - 100 Levels</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: black;
+            color: white;
+        }
+        canvas {
+            display: block;
+            margin: auto;
+            border: 5px solid red;
+        }
+        #info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+        button {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            padding: 10px;
+            background-color: #444;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <p id="level">Level: 1</p>
+        <p id="score">Score: 0</p>
+        <p id="time">Time: 0 sec</p>
+    </div>
+    <button id="music-toggle">Pause Music</button>
+    <canvas id="gameCanvas"></canvas>
+
+    <audio id="background-music" loop autoplay>
+        <source src="https://www.soundjay.com/button/beep-07.wav" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        const levelDisplay = document.getElementById("level");
+        const scoreDisplay = document.getElementById("score");
+        const timeDisplay = document.getElementById("time");
+        const musicToggle = document.getElementById("music-toggle");
+        const music = document.getElementById("background-music");
+
+        canvas.width = 600;
+        canvas.height = 600;
+
+        // Game Variables
+        let player = { x: 50, y: 550, size: 20 };
+        let goal = { x: 550, y: 50, size: 20 };
+        let obstacles = [];
+        let level = 1;
+        let score = 0;
+        let timer = 0;
+        let gameInterval;
+        let timeInterval;
+        const maxLevels = 100;
+        const obstacleSpeed = 2;
+
+        // Functions
+        function createObstacles() {
+            obstacles = [];
+            for (let i = 0; i < level + 2; i++) {
+                obstacles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    width: Math.random() * 50 + 30,
+                    height: 10,
+                    direction: i % 2 === 0 ? 1 : -1
+                });
+            }
+        }
+
+        function drawPlayer() {
+            ctx.fillStyle = "yellow";
+            ctx.fillRect(player.x, player.y, player.size, player.size);
+        }
+
+        function drawGoal() {
+            ctx.fillStyle = "lime";
+            ctx.fillRect(goal.x, goal.y, goal.size, goal.size);
+        }
+
+        function drawObstacles() {
+            ctx.fillStyle = "red";
+            obstacles.forEach(obs => {
+                ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+            });
+        }
+
+        function moveObstacles() {
+            obstacles.forEach(obs => {
+                obs.x += obs.direction * obstacleSpeed;
+                if (obs.x <= 0 || obs.x + obs.width >= canvas.width) {
+                    obs.direction *= -1;
+                }
+            });
+        }
+
+        function checkCollision() {
+            // Player-Goal Collision
+            if (player.x < goal.x + goal.size && player.x + player.size > goal.x &&
+                player.y < goal.y + goal.size && player.y + player.size > goal.y) {
+                levelUp();
+            }
+            // Player-Obstacle Collision
+            obstacles.forEach(obs => {
+                if (player.x < obs.x + obs.width && player.x + player.size > obs.x &&
+                    player.y < obs.y + obs.height && player.y + player.size > obs.y) {
+                    resetLevel();
+                }
+            });
+        }
+
+        function levelUp() {
+            if (level < maxLevels) {
+                level++;
+                score += 100;
+                player.x = 50;
+                player.y = 550;
+                createObstacles();
+                flashScreen("Level Up!");
+            } else {
+                alert("Congratulations! You've completed all levels!");
+                resetGame();
+            }
+        }
+
+        function resetLevel() {
+            player.x = 50;
+            player.y = 550;
+            flashScreen("Try Again!");
+        }
+
+        function resetGame() {
+            level = 1;
+            score = 0;
+            timer = 0;
+            createObstacles();
+        }
+
+        function flashScreen(text) {
+            ctx.fillStyle = "white";
+            ctx.font = "50px Arial";
+            ctx.fillText(text, canvas.width / 4, canvas.height / 2);
+            setTimeout(() => drawGame(), 1000);
+        }
+
+        function drawGame() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawPlayer();
+            drawGoal();
+            drawObstacles();
+            moveObstacles();
+            checkCollision();
+            levelDisplay.innerText = `Level: ${level}`;
+            scoreDisplay.innerText = `Score: ${score}`;
+            timeDisplay.innerText = `Time: ${timer} sec`;
+        }
+
+        function gameLoop() {
+            drawGame();
+        }
+
+        function startTimer() {
+            timeInterval = setInterval(() => {
+                timer++;
+            }, 1000);
+        }
+
+        function toggleMusic() {
+            if (music.paused) {
+                music.play();
+                musicToggle.innerText = "Pause Music";
+            } else {
+                music.pause();
+                musicToggle.innerText = "Play Music";
+            }
+        }
+
+        document.addEventListener("keydown", (e) => {
+            const speed = 10;
+            if (e.key === "ArrowUp") player.y -= speed;
+            if (e.key === "ArrowDown") player.y += speed;
+            if (e.key === "ArrowLeft") player.x -= speed;
+            if (e.key === "ArrowRight") player.x += speed;
+        });
+
+        musicToggle.addEventListener("click", toggleMusic);
+
+        // Initialize Game
+        createObstacles();
+        startTimer();
+        gameInterval = setInterval(gameLoop, 1000 / 60);
+    </script>
+</body>
+</html> -->
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maze Runner with Sound</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            text-align: center;
+            margin: 0;
+            overflow: hidden;
+        }
+        #gameCanvas {
+            border: 5px solid red;
+            display: block;
+            margin: 20px auto;
+            background-color: black;
+        }
+        #controls {
+            margin: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Maze Runner</h1>
+    <p>Navigate the green square to the yellow goal while avoiding red obstacles!</p>
+    <div id="controls">
+        <button id="startButton">Start Game</button>
+        <button id="soundButton">Play Sound</button>
+    </div>
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
+
+    <script>
+        // Get elements
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        const startButton = document.getElementById("startButton");
+        const soundButton = document.getElementById("soundButton");
+
+        // Sounds
+        const levelUpSound = new Audio("https://www.fesliyanstudios.com/play-mp3/6206");
+        const collisionSound = new Audio("https://www.fesliyanstudios.com/play-mp3/6112");
+
+        let gameRunning = false;
+        let player = { x: 10, y: 10, size: 20, color: "lime" };
+        let goal = { x: 360, y: 360, size: 20, color: "yellow" };
+        let obstacles = [
+            { x: 50, y: 100, width: 200, height: 20 },
+            { x: 150, y: 200, width: 20, height: 200 },
+            { x: 250, y: 50, width: 100, height: 20 }
+        ];
+        const moveSpeed = 10;
+
+        function drawGame() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Draw player
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.size, player.size);
+            // Draw goal
+            ctx.fillStyle = goal.color;
+            ctx.fillRect(goal.x, goal.y, goal.size, goal.size);
+            // Draw obstacles
+            ctx.fillStyle = "red";
+            obstacles.forEach(obstacle => {
+                ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+            });
+        }
+
+        function checkCollision() {
+            // Check collision with obstacles
+            for (let obstacle of obstacles) {
+                if (
+                    player.x < obstacle.x + obstacle.width &&
+                    player.x + player.size > obstacle.x &&
+                    player.y < obstacle.y + obstacle.height &&
+                    player.y + player.size > obstacle.y
+                ) {
+                    collisionSound.play();
+                    alert("Game Over! You hit an obstacle.");
+                    resetGame();
+                    return;
+                }
+            }
+            // Check if player reaches the goal
+            if (
+                player.x < goal.x + goal.size &&
+                player.x + player.size > goal.x &&
+                player.y < goal.y + goal.size &&
+                player.y + player.size > goal.y
+            ) {
+                levelUpSound.play();
+                alert("Level Complete!");
+                resetGame();
+            }
+        }
+
+        function resetGame() {
+            player.x = 10;
+            player.y = 10;
+            drawGame();
+        }
+
+        window.addEventListener("keydown", (e) => {
+            if (!gameRunning) return;
+            switch (e.key) {
+                case "ArrowUp":
+                    player.y = Math.max(player.y - moveSpeed, 0);
+                    break;
+                case "ArrowDown":
+                    player.y = Math.min(player.y + moveSpeed, canvas.height - player.size);
+                    break;
+                case "ArrowLeft":
+                    player.x = Math.max(player.x - moveSpeed, 0);
+                    break;
+                case "ArrowRight":
+                    player.x = Math.min(player.x + moveSpeed, canvas.width - player.size);
+                    break;
+            }
+            drawGame();
+            checkCollision();
+        });
+
+        startButton.addEventListener("click", () => {
+            gameRunning = true;
+            resetGame();
+        });
+
+        soundButton.addEventListener("click", () => {
+            levelUpSound.play();
+        });
+
+        drawGame();
+    </script>
+</body>
+</html> -->
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maze Runner - 100 Levels</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        canvas {
+            border: 5px solid red;
+            background-color: black;
+            display: block;
+        }
+        #info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 18px;
+        }
+        #soundButton {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 10px;
+            background-color: green;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <div>Level: <span id="level">1</span></div>
+        <div>Score: <span id="score">0</span></div>
+        <div>Time: <span id="time">0</span> sec</div>
+    </div>
+    <button id="soundButton">🔈 Sound</button>
+    <canvas id="gameCanvas" width="600" height="600"></canvas>
+
+    <audio id="collisionSound" src="https://assets.mixkit.co/active_storage/sfx/2010/2010-preview.mp3"></audio>
+    <audio id="levelUpSound" src="https://assets.mixkit.co/active_storage/sfx/253/253-preview.mp3"></audio>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const collisionSound = document.getElementById('collisionSound');
+        const levelUpSound = document.getElementById('levelUpSound');
+        const soundButton = document.getElementById('soundButton');
+        
+        let isSoundOn = true;
+        let level = 1;
+        let score = 0;
+        let time = 0;
+        let gameInterval;
+        let timeInterval;
+
+        const player = {
+            x: 50,
+            y: canvas.height - 50,
+            size: 20,
+            color: 'yellow',
+            speed: 3
+        };
+
+        const destination = {
+            x: canvas.width - 50,
+            y: 50,
+            size: 20,
+            color: 'lime'
+        };
+
+        const obstacles = [];
+
+        function generateObstacles(level) {
+            obstacles.length = 0;
+            const obstacleCount = Math.min(5 + level, 20); // Increase difficulty with levels
+            for (let i = 0; i < obstacleCount; i++) {
+                obstacles.push({
+                    x: Math.random() * (canvas.width - 50),
+                    y: Math.random() * (canvas.height - 50),
+                    width: 80,
+                    height: 10,
+                    color: 'red'
+                });
+            }
+        }
+
+        function drawPlayer() {
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.size, player.size);
+        }
+
+        function drawDestination() {
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(destination.x, destination.y, destination.size, destination.size);
+            ctx.fillStyle = destination.color;
+            ctx.fillRect(destination.x, destination.y, destination.size, destination.size);
+        }
+
+        function drawObstacles() {
+            obstacles.forEach(obstacle => {
+                ctx.fillStyle = obstacle.color;
+                ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+            });
+        }
+
+        function checkCollision() {
+            return obstacles.some(obstacle =>
+                player.x < obstacle.x + obstacle.width &&
+                player.x + player.size > obstacle.x &&
+                player.y < obstacle.y + obstacle.height &&
+                player.y + player.size > obstacle.y
+            );
+        }
+
+        function checkLevelCompletion() {
+            return (
+                player.x < destination.x + destination.size &&
+                player.x + player.size > destination.x &&
+                player.y < destination.y + destination.size &&
+                player.y + player.size > destination.y
+            );
+        }
+
+        function resetGame() {
+            player.x = 50;
+            player.y = canvas.height - 50;
+            generateObstacles(level);
+        }
+
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawPlayer();
+            drawDestination();
+            drawObstacles();
+            
+            if (checkCollision()) {
+                if (isSoundOn) collisionSound.play();
+                alert('Game Over!');
+                clearInterval(gameInterval);
+                clearInterval(timeInterval);
+                return;
+            }
+
+            if (checkLevelCompletion()) {
+                if (isSoundOn) levelUpSound.play();
+                level++;
+                score += 100;
+                document.getElementById('level').innerText = level;
+                document.getElementById('score').innerText = score;
+                resetGame();
+            }
+        }
+
+        function startGame() {
+            level = 1;
+            score = 0;
+            time = 0;
+            document.getElementById('level').innerText = level;
+            document.getElementById('score').innerText = score;
+            document.getElementById('time').innerText = time;
+            generateObstacles(level);
+            resetGame();
+            clearInterval(gameInterval);
+            clearInterval(timeInterval);
+            gameInterval = setInterval(gameLoop, 1000 / 60);
+            timeInterval = setInterval(() => {
+                time++;
+                document.getElementById('time').innerText = time;
+            }, 1000);
+        }
+
+        soundButton.addEventListener('click', () => {
+            isSoundOn = !isSoundOn;
+            soundButton.innerText = isSoundOn ? '🔈 Sound' : '🔇 Sound';
+        });
+
+        window.addEventListener('keydown', (e) => {
+            const key = e.key;
+            if (key === 'ArrowUp') player.y -= player.speed;
+            if (key === 'ArrowDown') player.y += player.speed;
+            if (key === 'ArrowLeft') player.x -= player.speed;
+            if (key === 'ArrowRight') player.x += player.speed;
+        });
+
+        startGame();
+    </script>
+</body>
+</html> -->
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maze Runner - (NexCore Games)</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        canvas {
+            border: 5px solid red;
+            background-color: black;
+            display: block;
+        }
+        #info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 18px;
+        }
+        #soundButton {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 10px;
+            background-color: green;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <div>Level: <span id="level">1</span></div>
+        <div>Score: <span id="score">0</span></div>
+        <div>Time: <span id="time">0</span> sec</div>
+    </div>
+    <button id="soundButton">🔈 Sound</button>
+    <canvas id="gameCanvas" width="600" height="600"></canvas>
+
+    <-- Sounds -->
+    <!-- <audio id="collisionSound" src="https://assets.mixkit.co/active_storage/sfx/2010/2010-preview.mp3"></audio>
+    <audio id="levelUpSound" src="https://assets.mixkit.co/active_storage/sfx/253/253-preview.mp3"></audio>
+    <audio id="powerUpSound" src="https://assets.mixkit.co/active_storage/sfx/116/116-preview.mp3"></audio>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const collisionSound = document.getElementById('collisionSound');
+        const levelUpSound = document.getElementById('levelUpSound');
+        const powerUpSound = document.getElementById('powerUpSound');
+        const soundButton = document.getElementById('soundButton');
+        
+        let isSoundOn = true;
+        let level = 1;
+        let score = 0;
+        let time = 0;
+        let gameInterval;
+        let timeInterval;
+
+        const player = {
+            x: 50,
+            y: canvas.height - 50,
+            size: 20,
+            color: 'yellow',
+            speed: 3,
+            boosted: false
+        };
+
+        const destination = {
+            x: canvas.width - 50,
+            y: 50,
+            size: 20,
+            color: 'lime'
+        };
+
+        const obstacles = [];
+        const powerUps = [];
+
+        function generateObstacles(level) {
+            obstacles.length = 0;
+            powerUps.length = 0;
+            const obstacleCount = Math.min(5 + level, 20);
+            for (let i = 0; i < obstacleCount; i++) {
+                obstacles.push({
+                    x: Math.random() * (canvas.width - 50),
+                    y: Math.random() * (canvas.height - 50),
+                    width: 80,
+                    height: 10,
+                    color: 'red'
+                });
+            }
+
+            // Add Power-Ups (one per level)
+            powerUps.push({
+                x: Math.random() * (canvas.width - 50),
+                y: Math.random() * (canvas.height - 50),
+                size: 15,
+                color: 'blue',
+                active: true
+            });
+        }
+
+        function drawPlayer() {
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.size, player.size);
+        }
+
+        function drawDestination() {
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(destination.x, destination.y, destination.size, destination.size);
+            ctx.fillStyle = destination.color;
+            ctx.fillRect(destination.x, destination.y, destination.size, destination.size);
+        }
+
+        function drawObstacles() {
+            obstacles.forEach(obstacle => {
+                ctx.fillStyle = obstacle.color;
+                ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+            });
+        }
+
+        function drawPowerUps() {
+            powerUps.forEach(powerUp => {
+                if (powerUp.active) {
+                    ctx.fillStyle = powerUp.color;
+                    ctx.beginPath();
+                    ctx.arc(powerUp.x, powerUp.y, powerUp.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+        }
+
+        function checkCollision() {
+            return obstacles.some(obstacle =>
+                player.x < obstacle.x + obstacle.width &&
+                player.x + player.size > obstacle.x &&
+                player.y < obstacle.y + obstacle.height &&
+                player.y + player.size > obstacle.y
+            );
+        }
+
+        function checkPowerUpCollision() {
+            powerUps.forEach(powerUp => {
+                if (powerUp.active &&
+                    player.x < powerUp.x + powerUp.size &&
+                    player.x + player.size > powerUp.x - powerUp.size &&
+                    player.y < powerUp.y + powerUp.size &&
+                    player.y + player.size > powerUp.y - powerUp.size
+                ) {
+                    if (isSoundOn) powerUpSound.play();
+                    player.speed = 6; // Speed boost
+                    powerUp.active = false;
+                    setTimeout(() => {
+                        player.speed = 3; // Reset speed after 5 seconds
+                    }, 5000);
+                }
+            });
+        }
+
+        function checkLevelCompletion() {
+            return (
+                player.x < destination.x + destination.size &&
+                player.x + player.size > destination.x &&
+                player.y < destination.y + destination.size &&
+                player.y + player.size > destination.y
+            );
+        }
+
+        function resetGame() {
+            player.x = 50;
+            player.y = canvas.height - 50;
+            generateObstacles(level);
+        }
+
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawPlayer();
+            drawDestination();
+            drawObstacles();
+            drawPowerUps();
+
+            if (checkCollision()) {
+                if (isSoundOn) collisionSound.play();
+                alert('Game Over!');
+                clearInterval(gameInterval);
+                clearInterval(timeInterval);
+                return;
+            }
+
+            checkPowerUpCollision();
+
+            if (checkLevelCompletion()) {
+                if (isSoundOn) levelUpSound.play();
+                level++;
+                score += 100;
+                document.getElementById('level').innerText = level;
+                document.getElementById('score').innerText = score;
+                resetGame();
+            }
+        }
+
+        function startGame() {
+            level = 1;
+            score = 0;
+            time = 0;
+            document.getElementById('level').innerText = level;
+            document.getElementById('score').innerText = score;
+            document.getElementById('time').innerText = time;
+            generateObstacles(level);
+            resetGame();
+            clearInterval(gameInterval);
+            clearInterval(timeInterval);
+            gameInterval = setInterval(gameLoop, 1000 / 60);
+            timeInterval = setInterval(() => {
+                time++;
+                document.getElementById('time').innerText = time;
+            }, 1000);
+        }
+
+        soundButton.addEventListener('click', () => {
+            isSoundOn = !isSoundOn;
+            soundButton.innerText = isSoundOn ? '🔈 Sound' : '🔇 Sound';
+        });
+
+        window.addEventListener('keydown', (e) => {
+            const key = e.key;
+            if (key === 'ArrowUp') player.y -= player.speed;
+            if (key === 'ArrowDown') player.y += player.speed;
+            if (key === 'ArrowLeft') player.x -= player.speed;
+            if (key === 'ArrowRight') player.x += player.speed;
+        });
+
+        startGame();
+    </script>
+</body>
+</html> -->
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MageRunner - Level Up Adventure</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        canvas {
+            border: 5px solid #ffffff;
+            display: block;
+        }
+        #ui {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #fff;
+        }
+        #ui span {
+            margin-right: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div id="ui">
+        <span>Level: <span id="level">1</span></span>
+        <span>Score: <span id="score">0</span></span>
+        <span>Time: <span id="time">0</span> sec</span>
+    </div>
+    <canvas id="gameCanvas" width="600" height="600"></canvas>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let level = 1;
+        let score = 0;
+        let time = 0;
+        let gameInterval;
+        let timeInterval;
+
+        const player = {
+            x: 40,
+            y: 560,
+            size: 20,
+            color: 'yellow',
+            speed: 4
+        };
+
+        const destination = {
+            x: 560,
+            y: 40,
+            size: 20,
+            color: 'lime'
+        };
+
+        const walls = [];
+
+        function generateMaze(level) {
+            walls.length = 0; // Clear existing walls
+            const wallCount = 10 + level * 5;
+            for (let i = 0; i < wallCount; i++) {
+                const wall = {
+                    x: Math.random() * (canvas.width - 50),
+                    y: Math.random() * (canvas.height - 50),
+                    width: Math.random() * 100 + 20,
+                    height: 10,
+                    color: 'red'
+                };
+                walls.push(wall);
+            }
+        }
+
+        function drawPlayer() {
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.size, player.size);
+        }
+
+        function drawDestination() {
+            ctx.fillStyle = destination.color;
+            ctx.fillRect(destination.x, destination.y, destination.size, destination.size);
+        }
+
+        function drawWalls() {
+            walls.forEach(wall => {
+                ctx.fillStyle = wall.color;
+                ctx.fillRect(wall.x, wall.y, wall.width, wall.height);
+            });
+        }
+
+        function checkCollision() {
+            return walls.some(wall =>
+                player.x < wall.x + wall.width &&
+                player.x + player.size > wall.x &&
+                player.y < wall.y + wall.height &&
+                player.y + player.size > wall.y
+            );
+        }
+
+        function checkLevelComplete() {
+            return (
+                player.x < destination.x + destination.size &&
+                player.x + player.size > destination.x &&
+                player.y < destination.y + destination.size &&
+                player.y + player.size > destination.y
+            );
+        }
+
+        function resetGame() {
+            player.x = 40;
+            player.y = 560;
+            generateMaze(level);
+        }
+
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            drawPlayer();
+            drawDestination();
+            drawWalls();
+
+            if (checkCollision()) {
+                alert('You hit a wall! Game Over.');
+                clearInterval(gameInterval);
+                clearInterval(timeInterval);
+                return;
+            }
+
+            if (checkLevelComplete()) {
+                alert(`Level ${level} Complete! Great Job!`);
+                level++;
+                score += 100;
+                document.getElementById('level').textContent = level;
+                document.getElementById('score').textContent = score;
+                resetGame();
+            }
+        }
+
+        function startGame() {
+            level = 1;
+            score = 0;
+            time = 0;
+            document.getElementById('level').textContent = level;
+            document.getElementById('score').textContent = score;
+            document.getElementById('time').textContent = time;
+            generateMaze(level);
+
+            gameInterval = setInterval(gameLoop, 1000 / 60);
+            timeInterval = setInterval(() => {
+                time++;
+                document.getElementById('time').textContent = time;
+            }, 1000);
+        }
+
+        window.addEventListener('keydown', e => {
+            const key = e.key;
+            if (key === 'ArrowUp') player.y -= player.speed;
+            if (key === 'ArrowDown') player.y += player.speed;
+            if (key === 'ArrowLeft') player.x -= player.speed;
+            if (key === 'ArrowRight') player.x += player.speed;
+        });
+
+        startGame();
+    </script>
+</body>
+</html> -->
+
+
+
+<!-- <!DOCTYPE html> -->
+<!-- <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MageRunner - Level Up Adventure</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        canvas {
+            border: 5px solid #ffffff;
+            display: block;
+        }
+        #ui {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #fff;
+        }
+        #ui span {
+            margin-right: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div id="ui">
+        <span>Level: <span id="level">1</span></span>
+        <span>Score: <span id="score">0</span></span>
+        <span>Time: <span id="time">0</span> sec</span>
+    </div>
+    <canvas id="gameCanvas" width="600" height="600"></canvas>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let level = 1;
+        let score = 0;
+        let time = 0;
+        let gameInterval;
+        let timeInterval;
+
+        const player = {
+            x: 40,
+            y: 560,
+            size: 20,
+            color: 'yellow',
+            speed: 4
+        };
+
+        const destination = {
+            x: 560,
+            y: 40,
+            size: 20,
+            color: 'lime'
+        };
+
+        const walls = [];
+
+        function generateMaze(level) {
+            walls.length = 0; // Clear existing walls
+            const wallCount = 10 + level * 5;
+            for (let i = 0; i < wallCount; i++) {
+                const wall = {
+                    x: Math.random() * (canvas.width - 50),
+                    y: Math.random() * (canvas.height - 50),
+                    width: Math.random() * 100 + 20,
+                    height: 10,
+                    color: 'red'
+                };
+                walls.push(wall);
+            }
+        }
+
+        function drawPlayer() {
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.size, player.size);
+        }
+
+        function drawDestination() {
+            ctx.fillStyle = destination.color;
+            ctx.fillRect(destination.x, destination.y, destination.size, destination.size);
+        }
+
+        function drawWalls() {
+            walls.forEach(wall => {
+                ctx.fillStyle = wall.color;
+                ctx.fillRect(wall.x, wall.y, wall.width, wall.height);
+            });
+        }
+
+        function checkCollision() {
+            return walls.some(wall =>
+                player.x < wall.x + wall.width &&
+                player.x + player.size > wall.x &&
+                player.y < wall.y + wall.height &&
+                player.y + player.size > wall.y
+            );
+        }
+
+        function checkLevelComplete() {
+            return (
+                player.x < destination.x + destination.size &&
+                player.x + player.size > destination.x &&
+                player.y < destination.y + destination.size &&
+                player.y + player.size > destination.y
+            );
+        }
+
+        function resetGame() {
+            player.x = 40;
+            player.y = 560;
+            generateMaze(level);
+        }
+
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            drawPlayer();
+            drawDestination();
+            drawWalls();
+
+            if (checkCollision()) {
+                alert('You hit a wall! Game Over.');
+                clearInterval(gameInterval);
+                clearInterval(timeInterval);
+                return;
+            }
+
+            if (checkLevelComplete()) {
+                alert(`Level ${level} Complete! Great Job!`);
+                level++;
+                score += 100;
+                document.getElementById('level').textContent = level;
+                document.getElementById('score').textContent = score;
+                resetGame();
+            }
+        }
+
+        function startGame() {
+            level = 1;
+            score = 0;
+            time = 0;
+            document.getElementById('level').textContent = level;
+            document.getElementById('score').textContent = score;
+            document.getElementById('time').textContent = time;
+            generateMaze(level);
+
+            gameInterval = setInterval(gameLoop, 1000 / 60);
+            timeInterval = setInterval(() => {
+                time++;
+                document.getElementById('time').textContent = time;
+            }, 1000);
+        }
+
+        window.addEventListener('keydown', e => {
+            const key = e.key;
+            if (key === 'ArrowUp') player.y -= player.speed;
+            if (key === 'ArrowDown') player.y += player.speed;
+            if (key === 'ArrowLeft') player.x -= player.speed;
+            if (key === 'ArrowRight') player.x += player.speed;
+        });
+
+        startGame();
+    </script>
+</body>
+</html> -->
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> MageRunner - NexCore Games </title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0d1117;
+            color: #fff;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        canvas {
+            border: 4px solid #fff;
+            background: #1a1a1a;
+        }
+        #ui {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+        #ui div {
+            margin-bottom: 5px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="ui">
+        <div>Level: <span id="level">1</span></div>
+        <div>Score: <span id="score">0</span></div>
+        <div>Time: <span id="time">0</span> seconds</div>
+    </div>
+    <canvas id="gameCanvas" width="800" height="800"></canvas>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const uiLevel = document.getElementById('level');
+        const uiScore = document.getElementById('score');
+        const uiTime = document.getElementById('time');
+        const powerUpSound = new Audio('');
+        const collisionSound = new Audio('');
+        const levelUpSound = new Audio('Sound/new-level-142995.mp3');
+
+
+        const player = {
+            x: 50,
+            y: 50,
+            size: 20,
+            color: 'yellow',
+            speed: 3,
+            boostedSpeed: 5,
+            isShielded: false
+        };
+
+        const destination = {
+            x: canvas.width - 70,
+            y: canvas.height - 70,
+            size: 30,
+            color: 'lime'
+        };
+
+        let powerUps = [];
+        let movingObstacles = [];
+        let teleportTiles = [];
+        let level = 1;
+        let score = 0;
+        let time = 0;
+        let isGameRunning = true;
+
+        // Utility: Generate Random Position
+        const randomPosition = (max) => Math.floor(Math.random() * max);
+
+        function generatePowerUps() {
+            powerUps = [];
+            powerUps.push({
+                x: randomPosition(canvas.width - 30),
+                y: randomPosition(canvas.height - 30),
+                size: 15,
+                type: 'speed',
+                color: 'blue'
+            });
+            powerUps.push({
+                x: randomPosition(canvas.width - 30),
+                y: randomPosition(canvas.height - 30),
+                size: 15,
+                type: 'shield',
+                color: 'orange'
+            });
+        }
+
+        function generateMovingObstacles() {
+            movingObstacles = [];
+            for (let i = 0; i < level; i++) {
+                movingObstacles.push({
+                    x: randomPosition(canvas.width - 100),
+                    y: randomPosition(canvas.height - 10),
+                    width: 100,
+                    height: 10,
+                    speed: 2 + Math.random(),
+                    direction: 'horizontal',
+                    color: 'red'
+                });
+            }
+        }
+
+        function generateTeleportTiles() {
+            teleportTiles = [];
+            teleportTiles.push({
+                x: randomPosition(canvas.width - 30),
+                y: randomPosition(canvas.height - 30),
+                size: 20,
+                targetX: randomPosition(canvas.width - 50),
+                targetY: randomPosition(canvas.height - 50),
+                color: 'purple'
+            });
+        }
+
+        function drawPlayer() {
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.size, player.size);
+        }
+
+        function drawDestination() {
+            ctx.fillStyle = destination.color;
+            ctx.fillRect(destination.x, destination.y, destination.size, destination.size);
+        }
+
+        function drawPowerUps() {
+            powerUps.forEach(p => {
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        function drawMovingObstacles() {
+            movingObstacles.forEach(o => {
+                ctx.fillStyle = o.color;
+                ctx.fillRect(o.x, o.y, o.width, o.height);
+                if (o.direction === 'horizontal') {
+                    o.x += o.speed;
+                    if (o.x < 0 || o.x + o.width > canvas.width) o.speed *= -1;
+                } else {
+                    o.y += o.speed;
+                    if (o.y < 0 || o.y + o.height > canvas.height) o.speed *= -1;
+                }
+            });
+        }
+
+        function drawTeleportTiles() {
+            teleportTiles.forEach(t => {
+                ctx.fillStyle = t.color;
+                ctx.fillRect(t.x, t.y, t.size, t.size);
+            });
+        }
+
+        function checkCollisionWithPowerUps() {
+            powerUps.forEach((p, index) => {
+                if (
+                    player.x < p.x + p.size &&
+                    player.x + player.size > p.x &&
+                    player.y < p.y + p.size &&
+                    player.y + player.size > p.y
+                ) {
+                    if (p.type === 'speed') {
+                        player.speed = player.boostedSpeed;
+                        setTimeout(() => (player.speed = 3), 5000);
+                    } else if (p.type === 'shield') {
+                        player.isShielded = true;
+                        setTimeout(() => (player.isShielded = false), 5000);
+                    }
+                    powerUps.splice(index, 1);
+                }
+            });
+        }
+
+        function gameLoop() {
+            if (!isGameRunning) return;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            drawPlayer();
+            drawDestination();
+            drawPowerUps();
+            drawMovingObstacles();
+            drawTeleportTiles();
+
+            checkCollisionWithPowerUps();
+
+            // Check for level completion
+            if (
+                player.x < destination.x + destination.size &&
+                player.x + player.size > destination.x &&
+                player.y < destination.y + destination.size &&
+                player.y + player.size > destination.y
+            ) {
+                level++;
+                score += 100;
+                uiLevel.innerText = level;
+                uiScore.innerText = score;
+                resetGame();
+            }
+            function checkCollisionWithObstacles() {
+            movingObstacles.forEach(o => {
+                if (
+                    player.x < o.x + o.width &&
+                    player.x + player.size > o.x &&
+                    player.y < o.y + o.height &&
+                    player.y + player.size > o.y
+                ) {
+                    if (!player.isShielded) {
+                        alert("Game Over! Collision detected.");
+                        resetGame();
+                        level = 1;
+                        score = 0;
+                        uiLevel.innerText = level;
+                        uiScore.innerText = score;
+                    }
+                }
+            });
+        }
+
+        }
+
+        function resetGame() {
+            player.x = 50;
+            player.y = 50;
+            generatePowerUps();
+            generateMovingObstacles();
+            generateTeleportTiles();
+        }
+
+        function startGame() {
+            generatePowerUps();
+            generateMovingObstacles();
+            generateTeleportTiles();
+            setInterval(() => {
+                if (isGameRunning) time++;
+                uiTime.innerText = time;
+            }, 1000);
+            setInterval(gameLoop, 1000 / 60);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowUp') player.y -= player.speed;
+            if (e.key === 'ArrowDown') player.y += player.speed;
+            if (e.key === 'ArrowLeft') player.x -= player.speed;
+            if (e.key === 'ArrowRight') player.x += player.speed;
+        });
+        levelUpSound.play();
+
+        startGame();
+    </script>
+</body>
+</html> -->
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> MageRunner - NexCore Games </title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0d1117;
+            color: #fff;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        canvas {
+            border: 4px solid #fff;
+            background: #1a1a1a;
+        }
+        #ui {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+        #ui div {
+            margin-bottom: 5px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="ui">
+        <div>Level: <span id="level">1</span></div>
+        <div>Score: <span id="score">0</span></div>
+        <div>Time: <span id="time">0</span> seconds</div>
+    </div>
+    <canvas id="gameCanvas" width="800" height="800"></canvas>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const uiLevel = document.getElementById('level');
+        const uiScore = document.getElementById('score');
+        const uiTime = document.getElementById('time');
+
+        const player = {
+            x: 50,
+            y: 50,
+            size: 20,
+            color: 'yellow',
+            speed: 3,
+            boostedSpeed: 5,
+            isShielded: false
+        };
+
+        const destination = {
+            x: canvas.width - 70,
+            y: canvas.height - 70,
+            size: 30,
+            color: 'lime'
+        };
+
+        let powerUps = [];
+        let movingObstacles = [];
+        let teleportTiles = [];
+        let level = 1;
+        let score = 0;
+        let time = 0;
+        let isGameRunning = true;
+
+        // Sounds
+        const powerUpSound = new Audio('Sound/yay-6120.mp3');
+        const collisionSound = new Audio('Sound/Game Over.mp3');
+        const levelUpSound = new Audio('Sound/New Level.mp3');
+
+        // Utility: Generate Random Position
+        const randomPosition = (max) => Math.floor(Math.random() * max);
+
+        function generatePowerUps() {
+            powerUps = [];
+            powerUps.push({
+                x: randomPosition(canvas.width - 30),
+                y: randomPosition(canvas.height - 30),
+                size: 15,
+                type: 'speed',
+                color: 'blue'
+            });
+            powerUps.push({
+                x: randomPosition(canvas.width - 30),
+                y: randomPosition(canvas.height - 30),
+                size: 15,
+                type: 'shield',
+                color: 'orange'
+            });
+        }
+
+        function generateMovingObstacles() {
+            movingObstacles = [];
+            for (let i = 0; i < level; i++) {
+                movingObstacles.push({
+                    x: randomPosition(canvas.width - 100),
+                    y: randomPosition(canvas.height - 10),
+                    width: 100,
+                    height: 10,
+                    speed: 2 + Math.random(),
+                    direction: 'horizontal',
+                    color: 'red'
+                });
+            }
+        }
+
+        function generateTeleportTiles() {
+            teleportTiles = [];
+            teleportTiles.push({
+                x: randomPosition(canvas.width - 30),
+                y: randomPosition(canvas.height - 30),
+                size: 20,
+                targetX: randomPosition(canvas.width - 50),
+                targetY: randomPosition(canvas.height - 50),
+                color: 'purple'
+            });
+        }
+
+        function drawPlayer() {
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.size, player.size);
+        }
+
+        function drawDestination() {
+            ctx.fillStyle = destination.color;
+            ctx.fillRect(destination.x, destination.y, destination.size, destination.size);
+        }
+
+        function drawPowerUps() {
+            powerUps.forEach(p => {
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        function drawMovingObstacles() {
+            movingObstacles.forEach(o => {
+                ctx.fillStyle = o.color;
+                ctx.fillRect(o.x, o.y, o.width, o.height);
+                if (o.direction === 'horizontal') {
+                    o.x += o.speed;
+                    if (o.x < 0 || o.x + o.width > canvas.width) o.speed *= -1;
+                } else {
+                    o.y += o.speed;
+                    if (o.y < 0 || o.y + o.height > canvas.height) o.speed *= -1;
+                }
+            });
+        }
+
+        function drawTeleportTiles() {
+            teleportTiles.forEach(t => {
+                ctx.fillStyle = t.color;
+                ctx.fillRect(t.x, t.y, t.size, t.size);
+            });
+        }
+
+        function checkCollisionWithPowerUps() {
+            powerUps.forEach((p, index) => {
+                if (
+                    player.x < p.x + p.size &&
+                    player.x + player.size > p.x &&
+                    player.y < p.y + p.size &&
+                    player.y + player.size > p.y
+                ) {
+                    powerUpSound.play();
+                    if (p.type === 'speed') {
+                        player.speed = player.boostedSpeed;
+                        setTimeout(() => (player.speed = 3), 5000);
+                    } else if (p.type === 'shield') {
+                        player.isShielded = true;
+                        setTimeout(() => (player.isShielded = false), 5000);
+                    }
+                    powerUps.splice(index, 1);
+                }
+            });
+        }
+
+        function checkCollisionWithObstacles() {
+            movingObstacles.forEach(o => {
+                if (
+                    player.x < o.x + o.width &&
+                    player.x + player.size > o.x &&
+                    player.y < o.y + o.height &&
+                    player.y + player.size > o.y
+                ) {
+                    if (!player.isShielded) {
+                        collisionSound.play();
+                        alert('Game Over! Collision detected.');
+                        resetGame();
+                        level = 1;
+                        score = 0;
+                        uiLevel.innerText = level;
+                        uiScore.innerText = score;
+                    }
+                }
+            });
+        }
+
+        function gameLoop() {
+            if (!isGameRunning) return;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            drawPlayer();
+            drawDestination();
+            drawPowerUps();
+            drawMovingObstacles();
+            drawTeleportTiles();
+
+            checkCollisionWithPowerUps();
+            checkCollisionWithObstacles();
+
+            // Check for level completion
+            if (
+                player.x < destination.x + destination.size &&
+                player.x + player.size > destination.x &&
+                player.y < destination.y + destination.size &&
+                player.y + player.size > destination.y
+            ) {
+                levelUpSound.play();
+                level++;
+                score += 100;
+                uiLevel.innerText = level;
+                uiScore.innerText = score;
+                resetGame();
+            }
+        }
+
+        function resetGame() {
+            player.x = 50;
+            player.y = 50;
+            generatePowerUps();
+            generateMovingObstacles();
+            generateTeleportTiles();
+        }
+
+        function startGame() {
+            generatePowerUps();
+            generateMovingObstacles();
+            generateTeleportTiles();
+            setInterval(() => {
+                if (isGameRunning) time++;
+                uiTime.innerText = time;
+            }, 1000);
+            setInterval(gameLoop, 1000 / 60);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowUp') player.y -= player.speed;
+            if (e.key === 'ArrowDown') player.y += player.speed;
+            if (e.key === 'ArrowLeft') player.x -= player.speed;
+            if (e.key === 'ArrowRight') player.x += player.speed;
+        });
+
+        startGame();
+    </script>
+</body>
+</html>
